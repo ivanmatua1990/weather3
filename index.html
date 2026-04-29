@@ -15,23 +15,20 @@
       position: relative;
     }
 
-    /* верхняя полоса */
     #weather-strip {
       position: absolute;
       top: 0px;
       left: 0px;
-      width: 440px;   /* ширина блока */
-      height: 75px;   /* высота полоски */
+      width: 440px;
+      height: 60px;   /* уменьшили высоту */
       overflow: hidden;
     }
 
-    /* сам виджет */
     #weather-box {
-      transform: scale(1.1); /* регулируй 1.0–1.4 */
+      transform: scale(1.1, 0.85); /* ширина норм, высоту сжали */
       transform-origin: top left;
     }
 
-    /* фикс ширины */
     #ww_df1ae3f8dcd6e {
       width: 440px !important;
       max-width: 440px !important;
