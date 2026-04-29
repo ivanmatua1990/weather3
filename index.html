@@ -15,25 +15,20 @@
       position: relative;
     }
 
-    /* ЛЕВАЯ ПОЛОВИНА */
+    /* ЛЕВАЯ ПОЛОВИНА ЭКРАНА */
     #weather-strip {
       position: absolute;
       top: 0;
       left: 0;
-      width: 440px;   /* ← половина экрана */
-      height: 90px;
+      width: 440px;
+      height: 80px;
       overflow: hidden;
     }
 
-    /* твой удачный масштаб + корректировка */
-    #weather-box {
-      transform: scale(4, 1.3) translateX(-120px);
-      transform-origin: top left;
-    }
-
+    /* сам виджет */
     #ww_df1ae3f8dcd6e {
       width: 440px !important;
-      max-width: 440px !important;
+      height: 80px !important;
     }
   </style>
 </head>
@@ -41,14 +36,12 @@
 <body>
 
   <div id="weather-strip">
-    <div id="weather-box">
-      <div id="ww_df1ae3f8dcd6e" v="1.3" loc="id"
-        a='{"t":"horizontal","lang":"ru","ids":[],"font":"Arial","sl_ics":"one_a","sl_sot":"celsius","cl_bkg":"image","cl_font":"#FFFFFF","cl_cloud":"#FFFFFF","cl_persp":"#81D4FA","cl_sun":"#FFC107","cl_moon":"#FFC107","cl_thund":"#FF5722","el_nme":3,"el_phw":3,"el_whr":3}'>
-        Больше прогнозов:
-        <a href="https://oneweather.org/tr/ankara/15_days/" id="ww_df1ae3f8dcd6e_u" target="_blank">
-          Ankara 15 günlük hava durumu
-        </a>
-      </div>
+    <div id="ww_df1ae3f8dcd6e" v="1.3" loc="auto"
+      a='{"t":"horizontal","lang":"ru","ids":[],"font":"Arial","sl_ics":"one_a","sl_sot":"celsius","cl_bkg":"image","cl_font":"#FFFFFF","cl_cloud":"#FFFFFF","cl_persp":"#81D4FA","cl_sun":"#FFC107","cl_moon":"#FFC107","cl_thund":"#FF5722","el_nme":3,"el_phw":3,"el_whr":3}'>
+      Установить
+      <a href="https://weatherwidget.org/ru/" id="ww_df1ae3f8dcd6e_u" target="_blank">
+        HTML погодный информер на сайт
+      </a>
     </div>
   </div>
 
