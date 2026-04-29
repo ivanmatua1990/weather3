@@ -19,22 +19,20 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 440px;
-      height: 120px;   /* регулируй */
+      width: 880px;   /* ВАЖНО: вся ширина экрана */
+      height: 120px;  /* твоя высота */
       overflow: hidden;
-      border: 0;
     }
 
-    /* ВАЖНО: увеличиваем, а не уменьшаем */
+    /* растягиваем по ширине */
     #weather-box {
-      transform: scale(1.6); /* 1.4–2.0 подбирай */
+      transform: scaleX(2) scaleY(1.2); /* ключ */
       transform-origin: top left;
     }
 
-    /* базовая ширина */
+    /* база */
     #ww_df1ae3f8dcd6e {
       width: 440px !important;
-      max-width: 440px !important;
     }
   </style>
 </head>
