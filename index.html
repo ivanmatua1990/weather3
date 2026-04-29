@@ -14,23 +14,24 @@
       overflow: hidden;
     }
 
-    /* контейнер полосы сверху */
+    /* верхняя полоса */
     #weather-strip {
       position: absolute;
       top: 0;
       left: 0;
-      width: 440px;   /* нужная ширина */
-      height: 120px;  /* высота полосы (меняй 80–150) */
+      width: 440px;
+      height: 120px;   /* регулируй */
       overflow: hidden;
+      border: 0;
     }
 
-    /* двигаем и масштабируем сам виджет */
+    /* ВАЖНО: увеличиваем, а не уменьшаем */
     #weather-box {
-      transform: scale(0.9); /* регулируй 0.7–1.2 */
+      transform: scale(1.6); /* 1.4–2.0 подбирай */
       transform-origin: top left;
     }
 
-    /* фикс ширины базового виджета */
+    /* базовая ширина */
     #ww_df1ae3f8dcd6e {
       width: 440px !important;
       max-width: 440px !important;
