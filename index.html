@@ -28,12 +28,10 @@
       top: 0;
       width: 440px;
       height: 80px;
-
       display: flex;
       align-items: center;
       gap: 16px;
-      padding: 8px 50px; /* увеличили отступ */
-
+      padding: 8px 50px;
       box-sizing: border-box;
       background: rgba(255,255,255,0.05);
       border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -55,7 +53,7 @@
     .info {
       display: flex;
       flex-direction: column;
-      margin-left: 12px; /* дополнительный сдвиг вправо */
+      margin-left: 12px;
     }
 
     .city {
@@ -79,31 +77,25 @@
 
 <div id="background"></div>
 
-<!-- ЛЕВЫЙ -->
 <div class="weather-bar" id="left">
   <div class="icon"><img id="icon1"></div>
   <div class="temp" id="temp1">--°</div>
-
   <div class="info">
     <div class="city">Караганда</div>
     <div class="desc" id="desc1">Загрузка...</div>
     <div class="wind" id="wind1">Ветер: --</div>
   </div>
-
   <div class="time" id="time1">--:--</div>
 </div>
 
-<!-- ПРАВЫЙ -->
 <div class="weather-bar" id="right">
   <div class="icon"><img id="icon2"></div>
   <div class="temp" id="temp2">--°</div>
-
   <div class="info">
     <div class="city">Караганда</div>
     <div class="desc" id="desc2">Загрузка...</div>
     <div class="wind" id="wind2">Ветер: --</div>
   </div>
-
   <div class="time" id="time2">--:--</div>
 </div>
 
@@ -122,8 +114,13 @@ const iconMap = {
 };
 
 const descMap = {
-  0:"Ясно",1:"Ясно",2:"Облачно",3:"Пасмурно",
-  61:"Дождь",71:"Снег",95:"Гроза"
+  0:"Ясно",
+  1:"Ясно",
+  2:"Облачно",
+  3:"Пасмурно",
+  61:"Дождь",
+  71:"Снег",
+  95:"Гроза"
 };
 
 function windDir(d){
@@ -132,35 +129,38 @@ function windDir(d){
 }
 
 function updateTime(){
-  const t = new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
+  const t = new Date().toLocaleTimeString("ru-RU", {
+    hour:"2-digit",
+    minute:"2-digit"
+  });
   document.getElementById("time1").textContent = t;
   document.getElementById("time2").textContent = t;
 }
 
 async function loadWeather(id){
-  const url=`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m&timezone=Asia%2FAlmaty`;
-  const r=await fetch(url);
-  const d=await r.json();
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m&timezone=Asia%2FAlmaty`;
+  const r = await fetch(url);
+  const d = await r.json();
 
-  const temp=Math.round(d.current.temperature_2m);
-  const code=d.current.weather_code;
-  const ws=Math.round(d.current.wind_speed_10m);
-  const wd=d.current.wind_direction_10m;
+  const temp = Math.round(d.current.temperature_2m);
+  const code = d.current.weather_code;
+  const ws = Math.round(d.current.wind_speed_10m / 3.6);
+  const wd = d.current.wind_direction_10m;
 
-  document.getElementById("temp"+id).textContent=temp+"°";
-  document.getElementById("desc"+id).textContent=descMap[code]||"Погода";
-  document.getElementById("wind"+id).textContent=`Ветер: ${ws} км/ч ${windDir(wd)}`;
-  document.getElementById("icon"+id).src=iconMap[code]||iconMap[2];
+  document.getElementById("temp"+id).textContent = temp + "°";
+  document.getElementById("desc"+id).textContent = descMap[code] || "Погода";
+  document.getElementById("wind"+id).textContent = `Ветер: ${ws} м/с ${windDir(wd)}`;
+  document.getElementById("icon"+id).src = iconMap[code] || iconMap[2];
 }
 
 updateTime();
-setInterval(updateTime,1000);
+setInterval(updateTime, 1000);
 
 loadWeather(1);
 loadWeather(2);
 
-setInterval(()=>loadWeather(1),600000);
-setInterval(()=>loadWeather(2),600000);
+setInterval(() => loadWeather(1), 600000);
+setInterval(() => loadWeather(2), 600000);
 </script>
 
 </body>
