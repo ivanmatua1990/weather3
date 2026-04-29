@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Weather Full LED</title>
+  <title>Weather LED</title>
 
   <style>
     html, body {
@@ -10,90 +10,94 @@
       padding: 0;
       width: 880px;
       height: 440px;
-      background: #000;
+      background: black;
       overflow: hidden;
       font-family: Arial, sans-serif;
       color: white;
     }
 
-    #container {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 40px;
+    /* ЛЕВАЯ ПАНЕЛЬ 440×440 */
+    #panel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 440px;
+      height: 440px;
+
+      background: linear-gradient(180deg, #111, #000);
+      border-right: 1px solid rgba(255,255,255,0.1);
       box-sizing: border-box;
     }
 
-    /* ЛЕВАЯ ЧАСТЬ */
-    #left {
+    /* ПОГОДА 440×80 */
+    #weather-bar {
+      width: 440px;
+      height: 80px;
+
       display: flex;
       align-items: center;
-      gap: 25px;
+      gap: 12px;
+      padding: 6px 14px;
+      box-sizing: border-box;
+
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
     #icon img {
-      width: 120px;
-      height: 120px;
+      width: 48px;
+      height: 48px;
     }
 
     #temp {
-      font-size: 110px;
+      font-size: 38px;
       font-weight: bold;
-      line-height: 1;
     }
 
     #info {
       display: flex;
       flex-direction: column;
-      gap: 8px;
     }
 
     #city {
-      font-size: 36px;
+      font-size: 18px;
       font-weight: bold;
     }
 
     #desc {
-      font-size: 24px;
+      font-size: 14px;
     }
 
     #wind {
-      font-size: 22px;
-      opacity: 0.9;
+      font-size: 14px;
     }
 
-    /* ПРАВАЯ ЧАСТЬ (ВРЕМЯ) */
     #time {
-      font-size: 140px;
+      margin-left: auto;
+      font-size: 26px;
       font-weight: bold;
-      text-align: right;
-      line-height: 1;
     }
   </style>
 </head>
 
 <body>
 
-<div id="container">
+  <div id="panel">
 
-  <div id="left">
-    <div id="icon"><img src=""></div>
-
-    <div>
+    <div id="weather-bar">
+      <div id="icon"><img src=""></div>
       <div id="temp">--°</div>
+
       <div id="info">
         <div id="city">Караганда</div>
         <div id="desc">Загрузка...</div>
         <div id="wind">Ветер: --</div>
       </div>
+
+      <div id="time">--:--</div>
     </div>
+
   </div>
-
-  <div id="time">--:--</div>
-
-</div>
 
 <script>
 const LAT = 49.8047;
@@ -150,7 +154,7 @@ async function loadWeather() {
     document.querySelector("#icon img").src =
       iconMap[code] || iconMap[2];
 
-  } catch (e) {
+  } catch {
     document.getElementById("desc").textContent = "Нет данных";
   }
 }
