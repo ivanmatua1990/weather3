@@ -31,8 +31,8 @@
 
       display: flex;
       align-items: center;
-      gap: 14px;
-      padding: 8px 28px; /* ← СДВИНУЛ ОТ КРАЯ */
+      gap: 16px;
+      padding: 8px 40px; /* ← ЕЩЁ БОЛЬШЕ ОТСТУП */
       box-sizing: border-box;
 
       background: rgba(255,255,255,0.05);
@@ -98,7 +98,7 @@
   <div class="temp" id="temp2">--°</div>
 
   <div class="info">
-    <div class="city">Астана</div>
+    <div class="city">Караганда</div>
     <div class="desc" id="desc2">Загрузка...</div>
     <div class="wind" id="wind2">Ветер: --</div>
   </div>
@@ -107,10 +107,8 @@
 </div>
 
 <script>
-const cities = [
-  {lat:49.8047, lon:73.1094, id:1}, // Караганда
-  {lat:51.1694, lon:71.4491, id:2}  // Астана
-];
+const LAT = 49.8047;
+const LON = 73.1094;
 
 const iconMap = {
   0:"https://cdn-icons-png.flaticon.com/512/869/869869.png",
@@ -138,8 +136,8 @@ function updateTime(){
   document.getElementById("time2").textContent = t;
 }
 
-async function loadWeather(city){
-  const url=`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m&timezone=Asia%2FAlmaty`;
+async function loadWeather(id){
+  const url=`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m&timezone=Asia%2FAlmaty`;
   const r=await fetch(url);
   const d=await r.json();
 
@@ -148,19 +146,20 @@ async function loadWeather(city){
   const ws=Math.round(d.current.wind_speed_10m);
   const wd=d.current.wind_direction_10m;
 
-  document.getElementById("temp"+city.id).textContent=temp+"°";
-  document.getElementById("desc"+city.id).textContent=descMap[code]||"Погода";
-  document.getElementById("wind"+city.id).textContent=`Ветер: ${ws} км/ч ${windDir(wd)}`;
-  document.getElementById("icon"+city.id).src=iconMap[code]||iconMap[2];
+  document.getElementById("temp"+id).textContent=temp+"°";
+  document.getElementById("desc"+id).textContent=descMap[code]||"Погода";
+  document.getElementById("wind"+id).textContent=`Ветер: ${ws} км/ч ${windDir(wd)}`;
+  document.getElementById("icon"+id).src=iconMap[code]||iconMap[2];
 }
 
 updateTime();
 setInterval(updateTime,1000);
 
-cities.forEach(c=>{
-  loadWeather(c);
-  setInterval(()=>loadWeather(c),600000);
-});
+loadWeather(1);
+loadWeather(2);
+
+setInterval(()=>loadWeather(1),600000);
+setInterval(()=>loadWeather(2),600000);
 </script>
 
 </body>
