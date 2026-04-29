@@ -31,48 +31,40 @@
       box-sizing: border-box;
     }
 
-    #icon {
-      font-size: 42px;
+    /* ИКОНКА */
+    #icon img {
       width: 48px;
-      text-align: center;
-      flex-shrink: 0;
+      height: 48px;
     }
 
     #temp {
       font-size: 38px;
       font-weight: bold;
-      flex-shrink: 0;
     }
 
     #info {
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      min-width: 0;
     }
 
     #top-line {
       font-size: 18px;
       font-weight: bold;
-      white-space: nowrap;
     }
 
     #desc {
       font-size: 14px;
-      white-space: nowrap;
     }
 
     #wind {
       font-size: 14px;
-      white-space: nowrap;
     }
 
+    /* ВРЕМЯ — СДЕЛАЛ КРУПНЕЕ */
     #time {
-      font-size: 20px;
+      font-size: 32px;
       font-weight: bold;
       margin-left: auto;
-      white-space: nowrap;
-      flex-shrink: 0;
     }
   </style>
 </head>
@@ -80,7 +72,7 @@
 <body>
 
   <div id="weather-bar">
-    <div id="icon">⛅</div>
+    <div id="icon"><img src="" alt=""></div>
     <div id="temp">--°</div>
 
     <div id="info">
@@ -96,24 +88,23 @@
     const LAT = 49.8047;
     const LON = 73.1094;
 
-    const map = {
-      0:["☀️","Ясно"],
-      1:["🌤️","Преим. ясно"],
-      2:["⛅","Облачно"],
-      3:["☁️","Пасмурно"],
-      45:["🌫️","Туман"],
-      48:["🌫️","Туман"],
-      61:["🌧️","Дождь"],
-      63:["🌧️","Дождь"],
-      65:["🌧️","Сильный дождь"],
-      71:["🌨️","Снег"],
-      73:["🌨️","Снег"],
-      75:["❄️","Сильный снег"],
-      95:["⛈️","Гроза"]
+    const iconMap = {
+      0: "https://cdn-icons-png.flaticon.com/512/869/869869.png", // солнце
+      1: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
+      2: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
+      3: "https://cdn-icons-png.flaticon.com/512/414/414825.png", // облака
+      61: "https://cdn-icons-png.flaticon.com/512/414/414974.png", // дождь
+      71: "https://cdn-icons-png.flaticon.com/512/642/642102.png", // снег
+      95: "https://cdn-icons-png.flaticon.com/512/1146/1146860.png" // гроза
+    };
+
+    const descMap = {
+      0:"Ясно",1:"Ясно",2:"Облачно",3:"Пасмурно",
+      61:"Дождь",71:"Снег",95:"Гроза"
     };
 
     function windDirection(deg) {
-      const dirs = ["С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "СЗ"];
+      const dirs = ["С","СВ","В","ЮВ","Ю","ЮЗ","З","СЗ"];
       return dirs[Math.round(deg / 45) % 8];
     }
 
@@ -139,17 +130,17 @@
         const code = data.current.weather_code;
         const windSpeed = Math.round(data.current.wind_speed_10m);
         const windDeg = data.current.wind_direction_10m;
-        const weather = map[code] || ["⛅", "Погода"];
 
-        document.getElementById("icon").textContent = weather[0];
         document.getElementById("temp").textContent = temp + "°";
-        document.getElementById("desc").textContent = weather[1];
+        document.getElementById("desc").textContent = descMap[code] || "Погода";
         document.getElementById("wind").textContent =
           `Ветер: ${windSpeed} км/ч ${windDirection(windDeg)}`;
 
+        document.querySelector("#icon img").src =
+          iconMap[code] || iconMap[2];
+
       } catch (e) {
         document.getElementById("desc").textContent = "Нет данных";
-        document.getElementById("wind").textContent = "Ветер: --";
       }
     }
 
