@@ -16,7 +16,6 @@
       color: white;
     }
 
-    /* ФОН */
     #background {
       position: absolute;
       width: 880px;
@@ -24,7 +23,6 @@
       background: linear-gradient(180deg, #0a0a0a, #000);
     }
 
-    /* ОБЩИЙ БЛОК */
     .weather-bar {
       position: absolute;
       top: 0;
@@ -33,15 +31,14 @@
 
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 6px 14px;
+      gap: 14px;
+      padding: 8px 28px; /* ← СДВИНУЛ ОТ КРАЯ */
       box-sizing: border-box;
 
       background: rgba(255,255,255,0.05);
       border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* ЧЁТКОЕ ДЕЛЕНИЕ */
     #left  { left: 0; }
     #right { left: 440px; }
 
@@ -111,8 +108,8 @@
 
 <script>
 const cities = [
-  {lat:49.8047, lon:73.1094, id:1},
-  {lat:51.1694, lon:71.4491, id:2}
+  {lat:49.8047, lon:73.1094, id:1}, // Караганда
+  {lat:51.1694, lon:71.4491, id:2}  // Астана
 ];
 
 const iconMap = {
