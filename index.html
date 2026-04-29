@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Погода</title>
+  <title>Weather LED</title>
 
   <style>
     html, body {
@@ -10,29 +10,31 @@
       padding: 0;
       width: 880px;
       height: 440px;
-      background: black;
+      background: transparent;
       overflow: hidden;
+      position: relative;
     }
 
     /* верхняя полоса */
     #weather-strip {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 880px;   /* ВАЖНО: вся ширина экрана */
-      height: 120px;  /* твоя высота */
+      top: 0px;
+      left: 0px;
+      width: 440px;   /* ширина блока */
+      height: 75px;   /* высота полоски */
       overflow: hidden;
     }
 
-    /* растягиваем по ширине */
+    /* сам виджет */
     #weather-box {
-      transform: scaleX(2) scaleY(1.2); /* ключ */
+      transform: scale(1.1); /* регулируй 1.0–1.4 */
       transform-origin: top left;
     }
 
-    /* база */
+    /* фикс ширины */
     #ww_df1ae3f8dcd6e {
       width: 440px !important;
+      max-width: 440px !important;
     }
   </style>
 </head>
