@@ -30,11 +30,15 @@ html, body {
     top: 0;
     width: 440px;
     height: 80px;
+
     display: flex;
     align-items: center;
+
     box-sizing: border-box;
+
     padding-left: 60px;
     padding-right: 35px;
+
     background: rgba(255,255,255,0.05);
     border-bottom: 1px solid rgba(255,255,255,0.12);
 }
@@ -91,7 +95,9 @@ html, body {
 <div id="background"></div>
 
 <div class="weather-bar" id="left">
+
     <div class="icon" id="icon1">⛅</div>
+
     <div class="temp" id="temp1">--°</div>
 
     <div class="info">
@@ -101,10 +107,13 @@ html, body {
     </div>
 
     <div class="time" id="time1">--:--</div>
+
 </div>
 
 <div class="weather-bar" id="right">
+
     <div class="icon" id="icon2">⛅</div>
+
     <div class="temp" id="temp2">--°</div>
 
     <div class="info">
@@ -114,42 +123,42 @@ html, body {
     </div>
 
     <div class="time" id="time2">--:--</div>
+
 </div>
 
 <script>
-const LAT = 49.8047;
-const LON = 73.1094;
 
 const weatherMap = {
     0: ["☀️", "Ясно"],
     1: ["🌤️", "Малооблачно"],
     2: ["⛅", "Облачно"],
     3: ["☁️", "Пасмурно"],
-    45: ["🌫️", "Туман"],
-    48: ["🌫️", "Туман"],
-    51: ["🌦️", "Морось"],
-    53: ["🌦️", "Морось"],
-    55: ["🌦️", "Морось"],
-    61: ["🌧️", "Дождь"],
-    63: ["🌧️", "Дождь"],
-    65: ["🌧️", "Сильный дождь"],
-    71: ["🌨️", "Снег"],
-    73: ["🌨️", "Снег"],
-    75: ["❄️", "Сильный снег"],
-    80: ["🌦️", "Ливень"],
-    81: ["🌦️", "Ливень"],
-    82: ["⛈️", "Ливень"],
-    95: ["⛈️", "Гроза"],
-    96: ["⛈️", "Гроза"],
-    99: ["⛈️", "Гроза"]
+    45:["🌫️","Туман"],
+    48:["🌫️","Туман"],
+    51:["🌦️","Морось"],
+    53:["🌦️","Морось"],
+    55:["🌦️","Морось"],
+    61:["🌧️","Дождь"],
+    63:["🌧️","Дождь"],
+    65:["🌧️","Сильный дождь"],
+    71:["🌨️","Снег"],
+    73:["🌨️","Снег"],
+    75:["❄️","Сильный снег"],
+    80:["🌦️","Ливень"],
+    81:["🌦️","Ливень"],
+    82:["⛈️","Ливень"],
+    95:["⛈️","Гроза"]
 };
 
 function windDirection(deg) {
-    const dirs = ["С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "СЗ"];
+
+    const dirs = ["С","СВ","В","ЮВ","Ю","ЮЗ","З","СЗ"];
+
     return dirs[Math.round(deg / 45) % 8];
 }
 
 function updateTime() {
+
     const time = new Date().toLocaleTimeString("ru-RU", {
         hour: "2-digit",
         minute: "2-digit"
@@ -159,59 +168,93 @@ function updateTime() {
     document.getElementById("time2").innerHTML = time;
 }
 
+function setWeather(id, data) {
+
+    const current = data.current;
+
+    const temp = Math.round(current.temperature_2m);
+
+    const code = current.weather_code;
+
+    const wind = Math.round(current.wind_speed_10m / 3.6);
+
+    const windDeg = current.wind_direction_10m;
+
+    const weather = weatherMap[code] || ["⛅", "Погода"];
+
+    document.getElementById("icon" + id).innerHTML =
+        weather[0];
+
+    document.getElementById("temp" + id).innerHTML =
+        temp + "°";
+
+    document.getElementById("desc" + id).innerHTML =
+        weather[1];
+
+    document.getElementById("wind" + id).innerHTML =
+        "Ветер: " + wind + " м/с " + windDirection(windDeg);
+}
+
 function loadWeather(id) {
+
     const xhr = new XMLHttpRequest();
 
     const url =
         "https://api.open-meteo.com/v1/forecast" +
-        "?latitude=" + LAT +
-        "&longitude=" + LON +
+        "?latitude=49.8047" +
+        "&longitude=73.1094" +
         "&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m" +
-        "&timezone=Asia%2FAlmaty";
+        "&timezone=auto";
 
     xhr.open("GET", url, true);
 
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            const data = JSON.parse(xhr.responseText);
-            const current = data.current;
+    xhr.onreadystatechange = function() {
 
-            const temp = Math.round(current.temperature_2m);
-            const code = current.weather_code;
-            const wind = Math.round(current.wind_speed_10m / 3.6);
-            const windDeg = current.wind_direction_10m;
+        if (xhr.readyState === 4) {
 
-            const weather = weatherMap[code] || ["⛅", "Погода"];
+            if (xhr.status === 200) {
 
-            document.getElementById("icon" + id).innerHTML = weather[0];
-            document.getElementById("temp" + id).innerHTML = temp + "°";
-            document.getElementById("desc" + id).innerHTML = weather[1];
-            document.getElementById("wind" + id).innerHTML =
-                "Ветер: " + wind + " м/с " + windDirection(windDeg);
-        } else {
-            document.getElementById("desc" + id).innerHTML = "Ошибка API";
-            document.getElementById("wind" + id).innerHTML = "Код: " + xhr.status;
+                const data = JSON.parse(xhr.responseText);
+
+                setWeather(id, data);
+
+            } else {
+
+                document.getElementById("desc" + id).innerHTML =
+                    "Ошибка API";
+
+                document.getElementById("wind" + id).innerHTML =
+                    "Код: " + xhr.status;
+            }
         }
     };
 
     xhr.onerror = function() {
-        document.getElementById("desc" + id).innerHTML = "Ошибка сети";
-        document.getElementById("wind" + id).innerHTML = "API недоступен";
+
+        document.getElementById("desc" + id).innerHTML =
+            "Ошибка сети";
+
+        document.getElementById("wind" + id).innerHTML =
+            "Нет подключения";
     };
 
     xhr.send();
 }
 
 updateTime();
+
 setInterval(updateTime, 1000);
 
 loadWeather(1);
 loadWeather(2);
 
 setInterval(function() {
+
     loadWeather(1);
     loadWeather(2);
+
 }, 600000);
+
 </script>
 
 </body>
