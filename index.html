@@ -94,7 +94,6 @@ html, body {
 
 <div id="background"></div>
 
-<!-- LEFT -->
 <div class="weather-bar" id="left">
 
     <div class="icon" id="icon1">⛅</div>
@@ -111,7 +110,6 @@ html, body {
 
 </div>
 
-<!-- RIGHT -->
 <div class="weather-bar" id="right">
 
     <div class="icon" id="icon2">⛅</div>
@@ -130,38 +128,6 @@ html, body {
 
 <script>
 
-const LAT = 49.8047;
-const LON = 73.1094;
-
-const weatherMap = {
-    0: ["☀️", "Ясно"],
-    1: ["🌤️", "Малооблачно"],
-    2: ["⛅", "Облачно"],
-    3: ["☁️", "Пасмурно"],
-    45:["🌫️","Туман"],
-    48:["🌫️","Туман"],
-    51:["🌦️","Морось"],
-    53:["🌦️","Морось"],
-    55:["🌦️","Морось"],
-    61:["🌧️","Дождь"],
-    63:["🌧️","Дождь"],
-    65:["🌧️","Сильный дождь"],
-    71:["🌨️","Снег"],
-    73:["🌨️","Снег"],
-    75:["❄️","Сильный снег"],
-    80:["🌦️","Ливень"],
-    81:["🌦️","Ливень"],
-    82:["⛈️","Ливень"],
-    95:["⛈️","Гроза"]
-};
-
-function windDirection(deg) {
-
-    const dirs = ["С","СВ","В","ЮВ","Ю","ЮЗ","З","СЗ"];
-
-    return dirs[Math.round(deg / 45) % 8];
-}
-
 function updateTime() {
 
     const time = new Date().toLocaleTimeString("ru-RU", {
@@ -173,62 +139,40 @@ function updateTime() {
     document.getElementById("time2").innerHTML = time;
 }
 
-function setWeather(id, data) {
-
-    const current = data.current;
-
-    const temp = Math.round(current.temperature_2m);
-
-    const code = current.weather_code;
-
-    const wind = Math.round(current.wind_speed_10m / 3.6);
-
-    const windDeg = current.wind_direction_10m;
-
-    const weather = weatherMap[code] || ["⛅", "Погода"];
-
-    document.getElementById("icon" + id).innerHTML = weather[0];
-
-    document.getElementById("temp" + id).innerHTML =
-        temp + "°";
-
-    document.getElementById("desc" + id).innerHTML =
-        weather[1];
-
-    document.getElementById("wind" + id).innerHTML =
-        "Ветер: " + wind + " м/с " + windDirection(windDeg);
-}
-
 function loadWeather(id) {
 
-    const url =
-        "https://api.open-meteo.com/v1/forecast" +
-        "?latitude=" + LAT +
-        "&longitude=" + LON +
-        "&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m" +
-        "&timezone=Asia%2FAlmaty";
+    fetch("https://wttr.in/Karaganda?format=j1")
+    .then(response => response.json())
+    .then(data => {
 
-    fetch(url)
-        .then(function(response) {
+        const current = data.current_condition[0];
 
-            return response.json();
+        const temp = current.temp_C;
 
-        })
-        .then(function(data) {
+        const wind = Math.round(current.windspeedKmph / 3.6);
 
-            setWeather(id, data);
+        const desc = current.weatherDesc[0].value;
 
-        })
-        .catch(function(error) {
+        document.getElementById("temp" + id).innerHTML =
+            temp + "°";
 
-            console.log(error);
+        document.getElementById("desc" + id).innerHTML =
+            desc;
 
-            document.getElementById("desc" + id).innerHTML =
-                "Ошибка API";
+        document.getElementById("wind" + id).innerHTML =
+            "Ветер: " + wind + " м/с";
 
-            document.getElementById("wind" + id).innerHTML =
-                "Нет данных";
-        });
+    })
+    .catch(error => {
+
+        console.log(error);
+
+        document.getElementById("desc" + id).innerHTML =
+            "Ошибка";
+
+        document.getElementById("wind" + id).innerHTML =
+            "Нет данных";
+    });
 }
 
 updateTime();
