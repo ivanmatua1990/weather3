@@ -30,29 +30,38 @@ html, body {
     top: 0;
     width: 440px;
     height: 80px;
+
     display: flex;
     align-items: center;
+
     box-sizing: border-box;
-    padding-left: 28px;
-    padding-right: 18px;
+
+    padding-left: 18px;
+    padding-right: 12px;
+
     background: rgba(255,255,255,0.05);
     border-bottom: 1px solid rgba(255,255,255,0.12);
 }
 
-#left { left: 0; }
-#right { left: 430px; }
+#left {
+    left: 0;
+}
+
+#right {
+    left: 430px;
+}
 
 .icon {
-    font-size: 38px;
-    width: 44px;
+    font-size: 34px;
+    width: 38px;
     text-align: center;
     flex-shrink: 0;
 }
 
 .temp {
-    font-size: 34px;
+    font-size: 31px;
     font-weight: bold;
-    margin-left: 12px;
+    margin-left: 8px;
     flex-shrink: 0;
 }
 
@@ -60,25 +69,28 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-left: 14px;
-    width: 170px;
+
+    margin-left: 10px;
+
+    width: 150px;
+
     overflow: hidden;
 }
 
 .desc {
-    font-size: 15px;
+    font-size: 12px;
     white-space: nowrap;
     font-weight: bold;
 }
 
 .wind {
-    font-size: 14px;
+    font-size: 13px;
     white-space: nowrap;
 }
 
 .time {
     margin-left: auto;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: bold;
     white-space: nowrap;
     flex-shrink: 0;
@@ -91,7 +103,9 @@ html, body {
 <div id="background"></div>
 
 <div class="weather-bar" id="left">
+
     <div class="icon" id="icon1">⛅</div>
+
     <div class="temp" id="temp1">--°</div>
 
     <div class="info">
@@ -100,10 +114,13 @@ html, body {
     </div>
 
     <div class="time" id="time1">--:--</div>
+
 </div>
 
 <div class="weather-bar" id="right">
+
     <div class="icon" id="icon2">⛅</div>
+
     <div class="temp" id="temp2">--°</div>
 
     <div class="info">
@@ -112,39 +129,54 @@ html, body {
     </div>
 
     <div class="time" id="time2">--:--</div>
+
 </div>
 
 <script>
+
 const weatherMap = {
-    0: ["☀️", "Без осадков"],
-    1: ["🌤️", "Без осадков"],
-    2: ["⛅", "Без осадков"],
-    3: ["☁️", "Пасмурно"],
-    45: ["🌫️", "Туман"],
-    48: ["🌫️", "Туман"],
-    51: ["🌦️", "Морось"],
-    53: ["🌦️", "Морось"],
-    55: ["🌦️", "Морось"],
+
+    0: ["☀️", "2 часа без осадков"],
+    1: ["🌤️", "2 часа без осадков"],
+    2: ["⛅", "2 часа без осадков"],
+
+    3: ["☁️", "Осадки маловероятны"],
+
+    45: ["🌫️", "Возможен туман"],
+    48: ["🌫️", "Возможен туман"],
+
+    51: ["🌦️", "Возможна морось"],
+    53: ["🌦️", "Возможна морось"],
+    55: ["🌦️", "Возможна морось"],
+
     61: ["🌧️", "Возможен дождь"],
     63: ["🌧️", "Возможен дождь"],
     65: ["🌧️", "Сильный дождь"],
+
     71: ["🌨️", "Возможен снег"],
     73: ["🌨️", "Возможен снег"],
     75: ["❄️", "Сильный снег"],
-    80: ["🌦️", "Осадки"],
-    81: ["🌦️", "Осадки"],
+
+    80: ["🌦️", "Ожидаются осадки"],
+    81: ["🌦️", "Ожидаются осадки"],
+
     82: ["⛈️", "Сильный ливень"],
-    95: ["⛈️", "Гроза"],
-    96: ["⛈️", "Гроза"],
-    99: ["⛈️", "Гроза"]
+
+    95: ["⛈️", "Возможна гроза"],
+    96: ["⛈️", "Возможна гроза"],
+    99: ["⛈️", "Возможна гроза"]
+
 };
 
 function windDirection(deg) {
-    const dirs = ["С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "СЗ"];
+
+    const dirs = ["С","СВ","В","ЮВ","Ю","ЮЗ","З","СЗ"];
+
     return dirs[Math.round(deg / 45) % 8];
 }
 
 function updateTime() {
+
     const time = new Date().toLocaleTimeString("ru-RU", {
         hour: "2-digit",
         minute: "2-digit"
@@ -155,15 +187,25 @@ function updateTime() {
 }
 
 function setBoth(icon, temp, statusText, windText) {
+
     for (let id = 1; id <= 2; id++) {
-        document.getElementById("icon" + id).innerHTML = icon;
-        document.getElementById("temp" + id).innerHTML = temp + "°";
-        document.getElementById("desc" + id).innerHTML = statusText;
-        document.getElementById("wind" + id).innerHTML = windText;
+
+        document.getElementById("icon" + id).innerHTML =
+            icon;
+
+        document.getElementById("temp" + id).innerHTML =
+            temp + "°";
+
+        document.getElementById("desc" + id).innerHTML =
+            statusText;
+
+        document.getElementById("wind" + id).innerHTML =
+            windText;
     }
 }
 
 function loadOpenMeteo() {
+
     const url =
         "https://api.open-meteo.com/v1/forecast" +
         "?latitude=49.8047" +
@@ -173,68 +215,130 @@ function loadOpenMeteo() {
         "&timezone=auto";
 
     fetch(url, { cache: "no-store" })
+
         .then(function(response) {
-            if (!response.ok) throw new Error("Open-Meteo error");
+
+            if (!response.ok)
+                throw new Error("Open-Meteo error");
+
             return response.json();
         })
+
         .then(function(data) {
+
             const current = data.current;
 
-            const temp = Math.round(current.temperature_2m);
-            const code = current.weather_code;
-            const wind = Math.round(current.wind_speed_10m);
-            const windDeg = current.wind_direction_10m;
+            const temp =
+                Math.round(current.temperature_2m);
 
-            const weather = weatherMap[code] || ["⛅", "Погода"];
+            const code =
+                current.weather_code;
+
+            const wind =
+                Math.round(current.wind_speed_10m);
+
+            const windDeg =
+                current.wind_direction_10m;
+
+            const weather =
+                weatherMap[code] || ["⛅", "Погода"];
 
             setBoth(
                 weather[0],
                 temp,
                 weather[1],
-                "Ветер: " + wind + " м/с " + windDirection(windDeg)
+                "Ветер: " + wind +
+                " м/с " +
+                windDirection(windDeg)
             );
         })
+
         .catch(function() {
+
             loadWttr();
         });
 }
 
 function loadWttr() {
-    const url = "https://wttr.in/Karaganda?format=j1";
+
+    const url =
+        "https://wttr.in/Karaganda?format=j1";
 
     fetch(url, { cache: "no-store" })
+
         .then(function(response) {
-            if (!response.ok) throw new Error("wttr error");
+
+            if (!response.ok)
+                throw new Error("wttr error");
+
             return response.json();
         })
-        .then(function(data) {
-            const current = data.current_condition[0];
 
-            const temp = Math.round(Number(current.temp_C));
-            const wind = Math.round(Number(current.windspeedKmph) / 3.6);
-            const desc = current.weatherDesc[0].value.toLowerCase();
+        .then(function(data) {
+
+            const current =
+                data.current_condition[0];
+
+            const temp =
+                Math.round(
+                    Number(current.temp_C)
+                );
+
+            const wind =
+                Math.round(
+                    Number(current.windspeedKmph) / 3.6
+                );
+
+            const desc =
+                current.weatherDesc[0]
+                .value
+                .toLowerCase();
 
             let icon = "⛅";
-            let statusText = "Без осадков";
 
-            if (desc.includes("rain") || desc.includes("drizzle")) {
+            let statusText =
+                "2 часа без осадков";
+
+            if (
+                desc.includes("rain") ||
+                desc.includes("drizzle")
+            ) {
+
                 icon = "🌧️";
-                statusText = "Возможен дождь";
+
+                statusText =
+                    "Возможен дождь";
             }
 
-            if (desc.includes("snow")) {
+            if (
+                desc.includes("snow")
+            ) {
+
                 icon = "🌨️";
-                statusText = "Возможен снег";
+
+                statusText =
+                    "Возможен снег";
             }
 
-            if (desc.includes("thunder")) {
+            if (
+                desc.includes("thunder")
+            ) {
+
                 icon = "⛈️";
-                statusText = "Гроза";
+
+                statusText =
+                    "Возможна гроза";
             }
 
-            if (desc.includes("fog") || desc.includes("mist")) {
+            if (
+                desc.includes("fog") ||
+                desc.includes("mist")
+            ) {
+
                 icon = "🌫️";
-                statusText = "Туман";
+
+                statusText =
+                    "Возможен туман";
             }
 
             setBoth(
@@ -244,7 +348,9 @@ function loadWttr() {
                 "Ветер: " + wind + " м/с"
             );
         })
+
         .catch(function() {
+
             setBoth(
                 "⚠️",
                 "--",
@@ -255,13 +361,17 @@ function loadWttr() {
 }
 
 updateTime();
+
 setInterval(updateTime, 1000);
 
 loadOpenMeteo();
 
 setInterval(function() {
+
     loadOpenMeteo();
+
 }, 600000);
+
 </script>
 
 </body>
