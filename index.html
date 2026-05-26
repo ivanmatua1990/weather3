@@ -1,198 +1,250 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Weather Dual LED</title>
+<meta charset="UTF-8">
+<title>Weather Dual LED</title>
 
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 880px;
-      height: 440px;
-      background: black;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-      color: white;
-    }
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 880px;
+    height: 440px;
+    overflow: hidden;
+    background: black;
+    font-family: Arial, sans-serif;
+    color: white;
+}
 
-    #background {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 880px;
-      height: 440px;
-      background: linear-gradient(180deg, #0a0a0a, #000);
-    }
+#background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 880px;
+    height: 440px;
+    background: linear-gradient(180deg, #101010, #000000);
+}
 
-    .weather-bar {
-      position: absolute;
-      top: 0;
-      width: 440px;
-      height: 80px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 8px 50px;
-      box-sizing: border-box;
-      background: rgba(255,255,255,0.05);
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
+.weather-bar {
+    position: absolute;
+    top: 0;
+    width: 440px;
+    height: 80px;
 
-    #left { left: 0; }
-    #right { left: 440px; }
+    display: flex;
+    align-items: center;
 
-    .icon {
-      font-size: 42px;
-      width: 48px;
-      text-align: center;
-      flex-shrink: 0;
-    }
+    box-sizing: border-box;
 
-    .temp {
-      font-size: 36px;
-      font-weight: bold;
-      flex-shrink: 0;
-    }
+    padding-left: 60px;
+    padding-right: 35px;
 
-    .info {
-      display: flex;
-      flex-direction: column;
-      margin-left: 12px;
-      min-width: 0;
-    }
+    background: rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+}
 
-    .city {
-      font-size: 18px;
-      font-weight: bold;
-      white-space: nowrap;
-    }
+#left {
+    left: 0;
+}
 
-    .desc, .wind {
-      font-size: 14px;
-      white-space: nowrap;
-    }
+#right {
+    left: 440px;
+}
 
-    .time {
-      margin-left: auto;
-      font-size: 26px;
-      font-weight: bold;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-  </style>
+.icon {
+    font-size: 42px;
+    width: 50px;
+    text-align: center;
+}
+
+.temp {
+    font-size: 36px;
+    font-weight: bold;
+    margin-left: 18px;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 18px;
+}
+
+.city {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.desc {
+    font-size: 14px;
+}
+
+.wind {
+    font-size: 14px;
+}
+
+.time {
+    margin-left: auto;
+    font-size: 26px;
+    font-weight: bold;
+}
+</style>
 </head>
 
 <body>
 
 <div id="background"></div>
 
+<!-- LEFT -->
 <div class="weather-bar" id="left">
-  <div class="icon" id="icon1">⛅</div>
-  <div class="temp" id="temp1">--°</div>
-  <div class="info">
-    <div class="city">Караганда</div>
-    <div class="desc" id="desc1">Загрузка...</div>
-    <div class="wind" id="wind1">Ветер: --</div>
-  </div>
-  <div class="time" id="time1">--:--</div>
+
+    <div class="icon" id="icon1">⛅</div>
+
+    <div class="temp" id="temp1">--°</div>
+
+    <div class="info">
+        <div class="city">Караганда</div>
+        <div class="desc" id="desc1">Загрузка...</div>
+        <div class="wind" id="wind1">Ветер: --</div>
+    </div>
+
+    <div class="time" id="time1">--:--</div>
+
 </div>
 
+<!-- RIGHT -->
 <div class="weather-bar" id="right">
-  <div class="icon" id="icon2">⛅</div>
-  <div class="temp" id="temp2">--°</div>
-  <div class="info">
-    <div class="city">Караганда</div>
-    <div class="desc" id="desc2">Загрузка...</div>
-    <div class="wind" id="wind2">Ветер: --</div>
-  </div>
-  <div class="time" id="time2">--:--</div>
+
+    <div class="icon" id="icon2">⛅</div>
+
+    <div class="temp" id="temp2">--°</div>
+
+    <div class="info">
+        <div class="city">Караганда</div>
+        <div class="desc" id="desc2">Загрузка...</div>
+        <div class="wind" id="wind2">Ветер: --</div>
+    </div>
+
+    <div class="time" id="time2">--:--</div>
+
 </div>
 
 <script>
+
 const LAT = 49.8047;
 const LON = 73.1094;
 
-const descMap = {
-  0:["☀️","Ясно"],
-  1:["🌤️","Ясно"],
-  2:["⛅","Облачно"],
-  3:["☁️","Пасмурно"],
-  45:["🌫️","Туман"],
-  48:["🌫️","Туман"],
-  51:["🌦️","Морось"],
-  53:["🌦️","Морось"],
-  55:["🌦️","Морось"],
-  61:["🌧️","Дождь"],
-  63:["🌧️","Дождь"],
-  65:["🌧️","Сильный дождь"],
-  71:["🌨️","Снег"],
-  73:["🌨️","Снег"],
-  75:["❄️","Сильный снег"],
-  80:["🌦️","Ливень"],
-  81:["🌦️","Ливень"],
-  82:["⛈️","Сильный ливень"],
-  95:["⛈️","Гроза"],
-  96:["⛈️","Гроза"],
-  99:["⛈️","Гроза"]
+const weatherMap = {
+    0: ["☀️", "Ясно"],
+    1: ["🌤️", "Малооблачно"],
+    2: ["⛅", "Облачно"],
+    3: ["☁️", "Пасмурно"],
+    45:["🌫️","Туман"],
+    48:["🌫️","Туман"],
+    51:["🌦️","Морось"],
+    53:["🌦️","Морось"],
+    55:["🌦️","Морось"],
+    61:["🌧️","Дождь"],
+    63:["🌧️","Дождь"],
+    65:["🌧️","Сильный дождь"],
+    71:["🌨️","Снег"],
+    73:["🌨️","Снег"],
+    75:["❄️","Сильный снег"],
+    80:["🌦️","Ливень"],
+    81:["🌦️","Ливень"],
+    82:["⛈️","Ливень"],
+    95:["⛈️","Гроза"]
 };
 
-function windDir(d){
-  const dirs = ["С","СВ","В","ЮВ","Ю","ЮЗ","З","СЗ"];
-  return dirs[Math.round(d / 45) % 8];
+function windDirection(deg) {
+
+    const dirs = ["С","СВ","В","ЮВ","Ю","ЮЗ","З","СЗ"];
+
+    return dirs[Math.round(deg / 45) % 8];
 }
 
-function updateTime(){
-  const t = new Date().toLocaleTimeString("ru-RU", {
-    hour: "2-digit",
-    minute: "2-digit"
-  });
+function updateTime() {
 
-  document.getElementById("time1").textContent = t;
-  document.getElementById("time2").textContent = t;
-}
-
-function loadWeather(id){
-  const url =
-    "https://api.open-meteo.com/v1/forecast?latitude=" + LAT +
-    "&longitude=" + LON +
-    "&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m" +
-    "&timezone=Asia%2FAlmaty";
-
-  fetch(url, { cache: "no-store" })
-    .then(function(response){
-      return response.json();
-    })
-    .then(function(data){
-      const temp = Math.round(data.current.temperature_2m);
-      const code = data.current.weather_code;
-      const windMs = Math.round(data.current.wind_speed_10m / 3.6);
-      const windDeg = data.current.wind_direction_10m;
-
-      const weather = descMap[code] || ["⛅", "Погода"];
-
-      document.getElementById("icon" + id).textContent = weather[0];
-      document.getElementById("temp" + id).textContent = temp + "°";
-      document.getElementById("desc" + id).textContent = weather[1];
-      document.getElementById("wind" + id).textContent =
-        "Ветер: " + windMs + " м/с " + windDir(windDeg);
-    })
-    .catch(function(){
-      document.getElementById("desc" + id).textContent = "Нет связи";
-      document.getElementById("wind" + id).textContent = "Проверь интернет";
+    const time = new Date().toLocaleTimeString("ru-RU", {
+        hour: "2-digit",
+        minute: "2-digit"
     });
+
+    document.getElementById("time1").innerHTML = time;
+    document.getElementById("time2").innerHTML = time;
+}
+
+function setWeather(id, data) {
+
+    const current = data.current;
+
+    const temp = Math.round(current.temperature_2m);
+
+    const code = current.weather_code;
+
+    const wind = Math.round(current.wind_speed_10m / 3.6);
+
+    const windDeg = current.wind_direction_10m;
+
+    const weather = weatherMap[code] || ["⛅", "Погода"];
+
+    document.getElementById("icon" + id).innerHTML = weather[0];
+
+    document.getElementById("temp" + id).innerHTML =
+        temp + "°";
+
+    document.getElementById("desc" + id).innerHTML =
+        weather[1];
+
+    document.getElementById("wind" + id).innerHTML =
+        "Ветер: " + wind + " м/с " + windDirection(windDeg);
+}
+
+function loadWeather(id) {
+
+    const url =
+        "https://api.open-meteo.com/v1/forecast" +
+        "?latitude=" + LAT +
+        "&longitude=" + LON +
+        "&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m" +
+        "&timezone=Asia%2FAlmaty";
+
+    fetch(url)
+        .then(function(response) {
+
+            return response.json();
+
+        })
+        .then(function(data) {
+
+            setWeather(id, data);
+
+        })
+        .catch(function(error) {
+
+            console.log(error);
+
+            document.getElementById("desc" + id).innerHTML =
+                "Ошибка API";
+
+            document.getElementById("wind" + id).innerHTML =
+                "Нет данных";
+        });
 }
 
 updateTime();
+
 setInterval(updateTime, 1000);
 
 loadWeather(1);
 loadWeather(2);
 
-setInterval(function(){
-  loadWeather(1);
-  loadWeather(2);
+setInterval(function() {
+
+    loadWeather(1);
+    loadWeather(2);
+
 }, 600000);
+
 </script>
 
 </body>
