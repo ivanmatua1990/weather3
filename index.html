@@ -40,7 +40,7 @@ html, body {
 }
 
 #left { left: 0; }
-#right { left: 440px; }
+#right { left: 430px; }
 
 .icon {
     font-size: 42px;
@@ -67,10 +67,12 @@ html, body {
 
 .desc {
     font-size: 14px;
+    white-space: nowrap;
 }
 
 .wind {
     font-size: 14px;
+    white-space: nowrap;
 }
 
 .time {
@@ -141,6 +143,32 @@ function windDirection(deg) {
     return dirs[Math.round(deg / 45) % 8];
 }
 
+function getStatusText(code) {
+    let statusText = "В ближайшие часы без осадков";
+
+    if (code >= 51 && code <= 67) {
+        statusText = "В ближайшие часы возможен дождь";
+    }
+
+    if (code >= 71 && code <= 77) {
+        statusText = "К вечеру возможен снег";
+    }
+
+    if (code >= 80 && code <= 82) {
+        statusText = "В ближайшие часы ожидаются осадки";
+    }
+
+    if (code >= 95) {
+        statusText = "Ожидается гроза";
+    }
+
+    if (code === 45 || code === 48) {
+        statusText = "Возможен туман";
+    }
+
+    return statusText;
+}
+
 function updateTime() {
     const time = new Date().toLocaleTimeString("ru-RU", {
         hour: "2-digit",
@@ -151,11 +179,11 @@ function updateTime() {
     document.getElementById("time2").innerHTML = time;
 }
 
-function setBoth(icon, temp, desc, windText) {
+function setBoth(icon, temp, statusText, windText) {
     for (let id = 1; id <= 2; id++) {
         document.getElementById("icon" + id).innerHTML = icon;
         document.getElementById("temp" + id).innerHTML = temp + "°";
-        document.getElementById("desc" + id).innerHTML = desc;
+        document.getElementById("desc" + id).innerHTML = statusText;
         document.getElementById("wind" + id).innerHTML = windText;
     }
 }
@@ -185,11 +213,12 @@ function loadOpenMeteo() {
             const windDeg = current.wind_direction_10m;
 
             const weather = weatherMap[code] || ["⛅", "Погода"];
+            const statusText = getStatusText(code);
 
             setBoth(
                 weather[0],
                 temp,
-                weather[1],
+                statusText,
                 "Ветер: " + wind + " м/с " + windDirection(windDeg)
             );
         })
@@ -213,12 +242,35 @@ function loadWttr() {
 
             const temp = Math.round(Number(current.temp_C));
             const wind = Math.round(Number(current.windspeedKmph) / 3.6);
-            const desc = current.weatherDesc[0].value;
+            const desc = current.weatherDesc[0].value.toLowerCase();
+
+            let icon = "⛅";
+            let statusText = "В ближайшие часы без осадков";
+
+            if (desc.includes("rain") || desc.includes("drizzle")) {
+                icon = "🌧️";
+                statusText = "В ближайшие часы возможен дождь";
+            }
+
+            if (desc.includes("snow")) {
+                icon = "🌨️";
+                statusText = "К вечеру возможен снег";
+            }
+
+            if (desc.includes("thunder")) {
+                icon = "⛈️";
+                statusText = "Ожидается гроза";
+            }
+
+            if (desc.includes("fog") || desc.includes("mist")) {
+                icon = "🌫️";
+                statusText = "Возможен туман";
+            }
 
             setBoth(
-                "⛅",
+                icon,
                 temp,
-                desc,
+                statusText,
                 "Ветер: " + wind + " м/с"
             );
         })
