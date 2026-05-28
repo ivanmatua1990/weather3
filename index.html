@@ -30,15 +30,10 @@ html, body {
     top: 0;
     width: 440px;
     height: 80px;
-
     display: flex;
     align-items: center;
-
+    justify-content: center;
     box-sizing: border-box;
-
-    padding-left: 16px;
-    padding-right: 10px;
-
     background: rgba(255,255,255,0.05);
     border-bottom: 1px solid rgba(255,255,255,0.12);
 }
@@ -48,12 +43,12 @@ html, body {
 }
 
 #right {
-    left: 430px;
+    left: 440px;
 }
 
 .icon {
     font-size: 36px;
-    width: 38px;
+    width: 40px;
     text-align: center;
     flex-shrink: 0;
 }
@@ -61,7 +56,8 @@ html, body {
 .temp {
     font-size: 36px;
     font-weight: bold;
-    margin-left: 6px;
+    width: 78px;
+    text-align: left;
     flex-shrink: 0;
 }
 
@@ -69,13 +65,8 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-
-    margin-left: 12px;
-
-    width: 135px;
-
+    width: 120px;
     overflow: visible;
-
     flex-shrink: 0;
 }
 
@@ -91,13 +82,11 @@ html, body {
 }
 
 .time {
-    margin-left: 10px;
-
     font-size: 28px;
     font-weight: bold;
-
+    width: 75px;
+    text-align: right;
     white-space: nowrap;
-
     flex-shrink: 0;
 }
 </style>
@@ -108,79 +97,49 @@ html, body {
 <div id="background"></div>
 
 <div class="weather-bar" id="left">
-
     <div class="icon" id="icon1">⛅</div>
-
     <div class="temp" id="temp1">--°</div>
-
     <div class="info">
         <div class="city">Караганда</div>
         <div class="wind" id="wind1">Ветер: --</div>
     </div>
-
     <div class="time" id="time1">--:--</div>
-
 </div>
 
 <div class="weather-bar" id="right">
-
     <div class="icon" id="icon2">⛅</div>
-
     <div class="temp" id="temp2">--°</div>
-
     <div class="info">
         <div class="city">Караганда</div>
         <div class="wind" id="wind2">Ветер: --</div>
     </div>
-
     <div class="time" id="time2">--:--</div>
-
 </div>
 
 <script>
-
 const weatherMap = {
-
-    0: "☀️",
-    1: "🌤️",
-    2: "⛅",
-    3: "☁️",
-
-    45: "🌫️",
-    48: "🌫️",
-
-    51: "🌤️",
-    53: "🌤️",
-    55: "🌧️",
-
-    61: "🌧️",
-    63: "🌧️",
-    65: "🌧️",
-
-    71: "🌨️",
-    73: "🌨️",
-    75: "❄️",
-
-    80: "🌦️",
-    81: "🌦️",
-
-    82: "⛈️",
-
-    95: "⛈️",
-    96: "⛈️",
-    99: "⛈️"
-
+    0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️",
+    45: "🌫️", 48: "🌫️",
+    51: "🌤️", 53: "🌤️", 55: "🌧️",
+    61: "🌧️", 63: "🌧️", 65: "🌧️",
+    71: "🌨️", 73: "🌨️", 75: "❄️",
+    80: "🌦️", 81: "🌦️", 82: "⛈️",
+    95: "⛈️", 96: "⛈️", 99: "⛈️"
 };
 
 function windDirection(deg) {
-
     const dirs = ["С","СВ","В","ЮВ","Ю","ЮЗ","З","СЗ"];
-
     return dirs[Math.round(deg / 45) % 8];
 }
 
-function updateTime() {
+function formatTemp(value) {
+    const number = Number(value);
+    if (isNaN(number)) return "--°";
+    if (number > 0) return "+" + number + "°";
+    return number + "°";
+}
 
+function updateTime() {
     const time = new Date().toLocaleTimeString("ru-RU", {
         hour: "2-digit",
         minute: "2-digit"
@@ -191,22 +150,14 @@ function updateTime() {
 }
 
 function setBoth(icon, temp, windText) {
-
     for (let id = 1; id <= 2; id++) {
-
-        document.getElementById("icon" + id).innerHTML =
-            icon;
-
-        document.getElementById("temp" + id).innerHTML =
-            (temp > 0 ? "+" : "") + temp + "°";
-
-        document.getElementById("wind" + id).innerHTML =
-            windText;
+        document.getElementById("icon" + id).innerHTML = icon;
+        document.getElementById("temp" + id).innerHTML = formatTemp(temp);
+        document.getElementById("wind" + id).innerHTML = windText;
     }
 }
 
 function loadOpenMeteo() {
-
     const url =
         "https://api.open-meteo.com/v1/forecast" +
         "?latitude=49.8047" +
@@ -216,145 +167,65 @@ function loadOpenMeteo() {
         "&timezone=auto";
 
     fetch(url, { cache: "no-store" })
-
         .then(function(response) {
-
-            if (!response.ok)
-                throw new Error("Open-Meteo error");
-
+            if (!response.ok) throw new Error("Open-Meteo error");
             return response.json();
         })
-
         .then(function(data) {
-
             const current = data.current;
-
-            const temp =
-                Math.round(current.temperature_2m);
-
-            const code =
-                current.weather_code;
-
-            const wind =
-                Math.round(current.wind_speed_10m);
-
-            const windDeg =
-                current.wind_direction_10m;
-
-            const icon =
-                weatherMap[code] || "⛅";
+            const temp = Math.round(current.temperature_2m);
+            const code = current.weather_code;
+            const wind = Math.round(current.wind_speed_10m);
+            const windDeg = current.wind_direction_10m;
+            const icon = weatherMap[code] || "⛅";
 
             setBoth(
                 icon,
                 temp,
-                "Ветер: " + wind +
-                " м/с " +
-                windDirection(windDeg)
+                "Ветер: " + wind + " м/с " + windDirection(windDeg)
             );
         })
-
         .catch(function() {
-
             loadWttr();
         });
 }
 
 function loadWttr() {
-
-    const url =
-        "https://wttr.in/Karaganda?format=j1";
+    const url = "https://wttr.in/Karaganda?format=j1";
 
     fetch(url, { cache: "no-store" })
-
         .then(function(response) {
-
-            if (!response.ok)
-                throw new Error("wttr error");
-
+            if (!response.ok) throw new Error("wttr error");
             return response.json();
         })
-
         .then(function(data) {
-
-            const current =
-                data.current_condition[0];
-
-            const temp =
-                Math.round(
-                    Number(current.temp_C)
-                );
-
-            const wind =
-                Math.round(
-                    Number(current.windspeedKmph) / 3.6
-                );
-
-            const desc =
-                current.weatherDesc[0]
-                .value
-                .toLowerCase();
+            const current = data.current_condition[0];
+            const temp = Math.round(Number(current.temp_C));
+            const wind = Math.round(Number(current.windspeedKmph) / 3.6);
+            const desc = current.weatherDesc[0].value.toLowerCase();
 
             let icon = "⛅";
 
-            if (
-                desc.includes("rain") ||
-                desc.includes("drizzle")
-            ) {
+            if (desc.includes("rain") || desc.includes("drizzle")) icon = "🌧️";
+            if (desc.includes("snow")) icon = "🌨️";
+            if (desc.includes("thunder")) icon = "⛈️";
+            if (desc.includes("fog") || desc.includes("mist")) icon = "🌫️";
 
-                icon = "🌧️";
-            }
-
-            if (
-                desc.includes("snow")
-            ) {
-
-                icon = "🌨️";
-            }
-
-            if (
-                desc.includes("thunder")
-            ) {
-
-                icon = "⛈️";
-            }
-
-            if (
-                desc.includes("fog") ||
-                desc.includes("mist")
-            ) {
-
-                icon = "🌫️";
-            }
-
-            setBoth(
-                icon,
-                temp,
-                "Ветер: " + wind + " м/с"
-            );
+            setBoth(icon, temp, "Ветер: " + wind + " м/с");
         })
-
         .catch(function() {
-
-            setBoth(
-                "⚠️",
-                "--",
-                "Нет данных"
-            );
+            setBoth("⚠️", null, "Нет данных");
         });
 }
 
 updateTime();
-
 setInterval(updateTime, 1000);
 
 loadOpenMeteo();
 
 setInterval(function() {
-
     loadOpenMeteo();
-
 }, 600000);
-
 </script>
 
 </body>
