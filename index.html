@@ -36,8 +36,8 @@ html, body {
 
     box-sizing: border-box;
 
-    padding-left: 18px;
-    padding-right: 12px;
+    padding-left: 16px;
+    padding-right: 10px;
 
     background: rgba(255,255,255,0.05);
     border-bottom: 1px solid rgba(255,255,255,0.12);
@@ -48,20 +48,20 @@ html, body {
 }
 
 #right {
-    left: 440px;
+    left: 430px;
 }
 
 .icon {
-    font-size: 38px;
-    width: 42px;
+    font-size: 36px;
+    width: 38px;
     text-align: center;
     flex-shrink: 0;
 }
 
 .temp {
-    font-size: 38px;
+    font-size: 36px;
     font-weight: bold;
-    margin-left: 8px;
+    margin-left: 6px;
     flex-shrink: 0;
 }
 
@@ -70,29 +70,34 @@ html, body {
     flex-direction: column;
     justify-content: center;
 
-    margin-left: 18px;
+    margin-left: 12px;
 
-    width: 120px;
+    width: 135px;
 
-    overflow: hidden;
+    overflow: visible;
+
+    flex-shrink: 0;
 }
 
 .city {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
     white-space: nowrap;
 }
 
 .wind {
-    font-size: 13px;
+    font-size: 12px;
     white-space: nowrap;
 }
 
 .time {
-    margin-left: auto;
-    font-size: 30px;
+    margin-left: 10px;
+
+    font-size: 28px;
     font-weight: bold;
+
     white-space: nowrap;
+
     flex-shrink: 0;
 }
 </style>
@@ -193,7 +198,7 @@ function setBoth(icon, temp, windText) {
             icon;
 
         document.getElementById("temp" + id).innerHTML =
-            temp + "°";
+            (temp > 0 ? "+" : "") + temp + "°";
 
         document.getElementById("wind" + id).innerHTML =
             windText;
